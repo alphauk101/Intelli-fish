@@ -1,3 +1,4 @@
+#include "Lighting.h"
 //main code for intelli-fish
 int LDR_PIN = A7;
 int LIGHT_VALUE = 300;//this should be between 1000 and 0, closer to 0 eqauls less light.
@@ -9,6 +10,7 @@ int SWHITE1_PIN = 12;
 int SWHITE2_PIN = 13;
 boolean DAYTIME = true;
 
+Lighting light = Lighting(SWHITE1_PIN,SWHITE2_PIN,SBLUE_PIN);
 
 void setup()
 {
@@ -22,7 +24,9 @@ void setup()
 }
 void loop()
 {
-  
+
+  //this is just tests
+  /*
   //check PIR if someones there then put the lights on maximum
   if(checkPIR())
   {
@@ -53,6 +57,7 @@ void loop()
       DAYTIME = true;
     }
   }
+  */
   
 }
 

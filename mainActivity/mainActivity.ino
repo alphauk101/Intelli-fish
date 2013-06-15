@@ -1,5 +1,13 @@
 #include "Lighting.h"
 //main code for intelli-fish
+
+//not sure how to expose these from the cpp library
+//so il default them to here for now
+int FULLPOWER = 1023;
+int HALFPOWER = 3098;
+int QUARTPOWER = 9345;
+int NIGHTPOWER = 7395;
+
 int LDR_PIN = A7;
 int LIGHT_VALUE = 300;//this should be between 1000 and 0, closer to 0 eqauls less light.
 int PIR_PIN = 2;
@@ -16,75 +24,34 @@ void setup()
 {
   pinMode(LDR_PIN,INPUT);
   pinMode(PIR_PIN,INPUT);
-  pinMode(SBLUE_PIN, OUTPUT);
-  pinMode(SWHITE1_PIN, OUTPUT);
-  pinMode(SWHITE2_PIN, OUTPUT);
 
   Serial.begin(9600);
+
+  //intailise lighting class
+  light.init();
 }
 void loop()
 {
+  delay(5000);//delay so not to blur the switching
 
-  //this is just tests
-  /*
-  //check PIR if someones there then put the lights on maximum
-  if(checkPIR())
+  switch(random(0,3))
   {
-    fadeLight(SWHITE2_PIN,true);
-  }
-  
-  if(! checkDayLight())//if its night time
-  {
-    //check if it is ALREADY night time 
-    if(DAYTIME == true)//we thought it was day
-    {
-      //so it was daytime now its night time so change light
-      fadeLight(SWHITE1_PIN,false);//fade down main light
-      fadeLight(SBLUE_PIN, true);//fade moonlight up
-      
-      DAYTIME = false;
-    }
-  }
-  else
-  {
-    //its daytime
-     //check if it is ALREADY night time 
-    if(DAYTIME == false)//we thought it was day
-    {
-      //so it was daytime now its night time so change light
-      fadeLight(SWHITE1_PIN,true);//fade down main light
-      fadeLight(SBLUE_PIN, false);//fade moonlight up
-      DAYTIME = true;
-    }
-  }
-  */
-  
-}
-
-//we pass a pin number and a bool true for up vice versa
-void fadeLight(int light, boolean fadeup)
-{
-  if(fadeup)
-  {
-    //fade light up
-    for(int a = 0; a <= 255; a++)
-    {
-      analogWrite(light,a);
-      delay(5);
-    }
-  
-  }
-  else
-  {
-    //fade down
-    for(int a = 255; a >= 0; a--)
-    {
-      analogWrite(light,a);
-      delay(5);
-    }
-  }
+    case(0):
+    light.LightingOnMode(FULLPOWER);
+    break;
+    case(1):
+    light.LightingOnMode(HALFPOWER);
+    break;
+    case(2):
+    light.LightingOnMode(QUARTPOWER);
+    break;
+    case(3):
+    light.LightingOnMode(NIGHTPOWER);
+    break;    
+  } 
 
 }
+
 
 //Check the time of day
 boolean checkDayLight()
@@ -111,4 +78,6 @@ boolean checkPIR()
     return false;
   }
 }
+
+
 

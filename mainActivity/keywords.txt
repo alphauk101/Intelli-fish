@@ -1,0 +1,13 @@
+consts
+FULL_POWER
+HALF_POWER
+QUART_POWER
+NIGHT_POWER
+
+public:
+Lighting(pin,pin,pin) // constructor
+LightingOnMode(mode) //pass mode to switch lights accordingly
+init()//intailises the class including the ports
+
+private:
+switchLight(int, bool) //switch appropriate light on or off.

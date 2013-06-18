@@ -1,4 +1,5 @@
 #include "Lighting.h"
+#include "Sensors.h"
 //main code for intelli-fish
 
 //not sure how to expose these from the cpp library
@@ -18,7 +19,9 @@ int SWHITE1_PIN = 12;
 int SWHITE2_PIN = 13;
 boolean DAYTIME = true;
 
-Lighting light = Lighting(SWHITE1_PIN,SWHITE2_PIN,SBLUE_PIN);
+Lighting light = Lighting(SWHITE1_PIN,SWHITE2_PIN,SBLUE_PIN);//lighting class
+Sensors sensor;
+
 
 void setup()
 {
@@ -29,6 +32,10 @@ void setup()
 
   //intailise lighting class
   light.init();
+  //intailise sensors
+  sensor.SetPins(10,11);//not the right pins atm 
+  sensor.init();
+
 }
 void loop()
 {
@@ -78,6 +85,7 @@ boolean checkPIR()
     return false;
   }
 }
+
 
 
 

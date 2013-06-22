@@ -4,10 +4,15 @@
 
 //not sure how to expose these from the cpp library
 //so il default them to here for now
-int FULLPOWER = 1023;
-int HALFPOWER = 3098;
-int QUARTPOWER = 9345;
-int NIGHTPOWER = 7395;
+
+static int FULL_POWER = 1023;
+static int HALF_POWER = 3098;
+static int QUART_POWER = 9345;
+static int NIGHT_POWER = 7395;
+
+
+//static int PIR = 20;
+//static int LDR = 21;
 
 int LDR_PIN = A7;
 int LIGHT_VALUE = 300;//this should be between 1000 and 0, closer to 0 eqauls less light.
@@ -29,36 +34,68 @@ void setup()
   pinMode(PIR_PIN,INPUT);
 
   Serial.begin(9600);
-
+  Serial.println("Serial Communication Started.....");
   //intailise lighting class
   light.init();
-  //intailise sensors
-  sensor.SetPins(10,11);//not the right pins atm 
-  sensor.init();
 
+  //intailise sensors
+  sensor.SetPins(A1,A2);//PIR,LDR
+  
+  sensor.init();
+  Serial.println("Set up complete running routine...");
 }
 void loop()
 {
-  delay(5000);//delay so not to blur the switching
+  //ok first thing check what day time
+  checkLight();
 
-  switch(random(0,3))
+
+  if(DAYTIME)
   {
-    case(0):
-    light.LightingOnMode(FULLPOWER);
-    break;
-    case(1):
-    light.LightingOnMode(HALFPOWER);
-    break;
-    case(2):
-    light.LightingOnMode(QUARTPOWER);
-    break;
-    case(3):
-    light.LightingOnMode(NIGHTPOWER);
-    break;    
-  } 
+    Serial.println("DAY TIME");
+    //its daytime so we need to manage half power etc
+    light.LightingOnMode(FULL_POWER);
+  }
+  else
+  {
+    //its night time s do to night time the lighting class will manage the duplicate requests
+    Serial.println("NIGHT TIME");
+    light.LightingOnMode(NIGHT_POWER);
+  }
 
+  if(sensor.getStatus(sensor.PIR))
+  {
+    //the PIR has seen something so reset the timers
+    Serial.println("SEEN SEEN");
+  }
+
+  delay(1000);
 }
 
+//checks the light level in the room and set DAYTIME flags
+void checkLight()
+{
+  if(sensor.getStatus(sensor.LDR))//if its night
+  {  
+    //it is worth waiting X secs to "double check that it is definitly night time and not just a false reading"
+    if(DAYTIME)
+    {
+      delay(5000);
+      if(sensor.getStatus(sensor.LDR))
+      {
+        DAYTIME = false;
+      }
+    }
+  }
+  else
+  {
+    delay(2000);
+    if(! sensor.getStatus(sensor.LDR))
+    {
+      DAYTIME = true;
+    }
+  }
+}
 
 //Check the time of day
 boolean checkDayLight()
@@ -85,6 +122,8 @@ boolean checkPIR()
     return false;
   }
 }
+
+
 
 
 

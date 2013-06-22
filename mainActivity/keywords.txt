@@ -18,3 +18,11 @@ init()//intailises the class including the ports
 private:
 switchLight(int, bool) //switch appropriate light on or off.
 halfLight(int, bool)// switches the passed light to half power true to go up
+
+
+Sensor class
+============
+SetPins(pin PIR,pin LDR)
+init() intialise the the pins 
+getStatus(int sensor) returns a bool if the selected sensor detects night or a person
+*if LDR returns true its night time*

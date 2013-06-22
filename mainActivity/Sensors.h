@@ -7,8 +7,8 @@ class Sensors
   void SetPins(int,int); 
   void init(void);
   bool getStatus(int);
-  static int _pir;
-  static int _ldr;
+  int LDR;
+  int PIR;
   
   private:
 

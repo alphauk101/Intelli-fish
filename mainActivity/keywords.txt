@@ -1,8 +1,14 @@
+WHITE1 = Always on in day mode and switched to half power in quarter mode
+WHITE2 = Is switched off completely when going to half power and below
+BLUE = is night mode.
+
+
 consts
-FULL_POWER
-HALF_POWER
-QUART_POWER
-NIGHT_POWER
+  int FULL_POWER = 1023;
+  int HALF_POWER = 3098;
+  int QUART_POWER = 9345;
+  int NIGHT_POWER = 7395;
+
 
 public:
 Lighting(pin,pin,pin) // constructor
@@ -11,3 +17,4 @@ init()//intailises the class including the ports
 
 private:
 switchLight(int, bool) //switch appropriate light on or off.
+halfLight(int, bool)// switches the passed light to half power true to go up

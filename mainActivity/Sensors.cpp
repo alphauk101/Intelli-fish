@@ -51,16 +51,14 @@ bool Sensors::getStatus(int sensor)
     }
   }else if(sensor == PIR)
   {
-    Serial.println(analogRead(PIR_PIN));
     //check the ldr status
     if(analogRead(PIR_PIN) > 500)
     {
-      Serial.println("high");
       return true;
     }else
     {
-      Serial.println("low");
       return false;
     }
   }
 }
+

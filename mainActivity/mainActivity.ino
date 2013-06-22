@@ -5,20 +5,17 @@
 //not sure how to expose these from the cpp library
 //so il default them to here for now
 
-static int FULL_POWER = 1023;
-static int HALF_POWER = 3098;
-static int QUART_POWER = 9345;
-static int NIGHT_POWER = 7395;
+static int FULLPOWER = 1023;
+static int HALFPOWER = 3098;
+static int QUARTPOWER = 9345;
+static int NIGHTPOWER = 7395;
 
 unsigned long HALFPOWER_TIMER = 10 * 1000;
 unsigned long CURRENT_TIME;
 
-//static int PIR = 20;
-//static int LDR = 21;
 
-int LDR_PIN = A7;
 int LIGHT_VALUE = 300;//this should be between 1000 and 0, closer to 0 eqauls less light.
-int PIR_PIN = 2;
+
 
 //these leds are status for each strip of lights
 int SBLUE_PIN = 11;
@@ -32,9 +29,6 @@ Sensors sensor;
 
 void setup()
 {
-  pinMode(LDR_PIN,INPUT);
-  pinMode(PIR_PIN,INPUT);
-
   Serial.begin(9600);
   Serial.println("Serial Communication Started.....");
   //intailise lighting class
@@ -42,9 +36,9 @@ void setup()
 
   //intailise sensors
   sensor.SetPins(A1,A2);//PIR,LDR
-  
+
   sensor.init();
-  
+
   CURRENT_TIME = millis();//set the timer so we have something to use
   Serial.println("Set up complete running routine...");
 }
@@ -57,28 +51,36 @@ void loop()
   if(DAYTIME)
   {
     Serial.println("DAY TIME");
+    
     //its daytime so we need to manage half power etc
-    light.LightingOnMode(FULL_POWER);
+
+    if(timerOne(false))
+    {
+      //go down to half power
+      Serial.println("going to half");
+      light.LightingOnMode(HALFPOWER);
+    }else
+    {
+      Serial.println("going to full power");
+      light.LightingOnMode(FULLPOWER);
+    }
   }
   else
   {
     //its night time s do to night time the lighting class will manage the duplicate requests
     Serial.println("NIGHT TIME");
-    light.LightingOnMode(NIGHT_POWER);
+    light.LightingOnMode(NIGHTPOWER);
   }
 
   if(sensor.getStatus(sensor.PIR))
   {
     //the PIR has seen something so reset the timers
-    Serial.println("SEEN SEEN");
-  }
-
-  if(timerOne(false))
-  {
-    Serial.println("Timer up");
+    Serial.println(">>>>>>>>>>>>>>>> PIR SENSOR TRIGGERED <<<<<<<<<<<<<<<");
     timerOne(true);
   }
-  
+
+
+
   delay(1000);
 }
 
@@ -107,37 +109,12 @@ void checkLight()
   }
 }
 
-//Check the time of day
-boolean checkDayLight()
-{
-  Serial.println(analogRead(LDR_PIN));
-  if(analogRead(LDR_PIN) > LIGHT_VALUE)
-  {
-    return true;
-  }
-  else
-  {
-    return false;
-  }
-}
 
-boolean checkPIR()
-{
-  if(digitalRead(PIR_PIN) == HIGH)
-  {
-    return true;
-  }
-  else
-  {
-    return false;
-  }
-}
-
-  //if a true is passed then timer is reset is a false is passed then we are just updating
+//if a true is passed then timer is reset is a false is passed then we are just updating
 boolean timerOne(boolean reset)
 {
   //if a true is passed then timer is reset is a false is passed then we are just updating
-  
+
   if(reset)
   {
     //reset the timer
@@ -149,14 +126,16 @@ boolean timerOne(boolean reset)
     if((millis() - CURRENT_TIME) > HALFPOWER_TIMER)
     {
       return true;
-    }else
+    }
+    else
     {
       return false;
     }
   }
-  
+
   //If a true is returned then the timer is up
 }
+
 
 
 

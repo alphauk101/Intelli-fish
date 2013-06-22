@@ -10,6 +10,8 @@ static int HALF_POWER = 3098;
 static int QUART_POWER = 9345;
 static int NIGHT_POWER = 7395;
 
+unsigned long HALFPOWER_TIMER = 10 * 1000;
+unsigned long CURRENT_TIME;
 
 //static int PIR = 20;
 //static int LDR = 21;
@@ -42,6 +44,8 @@ void setup()
   sensor.SetPins(A1,A2);//PIR,LDR
   
   sensor.init();
+  
+  CURRENT_TIME = millis();//set the timer so we have something to use
   Serial.println("Set up complete running routine...");
 }
 void loop()
@@ -69,6 +73,12 @@ void loop()
     Serial.println("SEEN SEEN");
   }
 
+  if(timerOne(false))
+  {
+    Serial.println("Timer up");
+    timerOne(true);
+  }
+  
   delay(1000);
 }
 
@@ -123,6 +133,30 @@ boolean checkPIR()
   }
 }
 
+  //if a true is passed then timer is reset is a false is passed then we are just updating
+boolean timerOne(boolean reset)
+{
+  //if a true is passed then timer is reset is a false is passed then we are just updating
+  
+  if(reset)
+  {
+    //reset the timer
+    CURRENT_TIME = millis();
+  }
+  else
+  {
+    //if time up then return true else return false
+    if((millis() - CURRENT_TIME) > HALFPOWER_TIMER)
+    {
+      return true;
+    }else
+    {
+      return false;
+    }
+  }
+  
+  //If a true is returned then the timer is up
+}
 
 
 

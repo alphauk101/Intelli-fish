@@ -19,6 +19,7 @@ void Sensors::SetPins(int mPIR, int mLDR)
   Serial.println(PIR_PIN);
   Serial.print("LDR pin: ");
   Serial.println(LDR_PIN);
+  
 }
 
 void Sensors::init(void)
@@ -29,6 +30,18 @@ void Sensors::init(void)
   
   LDR = 2014;
   PIR = 1321;
+  
+  Serial.println("Intialising PIR");
+  for(int a = 0; a < 60; a++)
+  {
+    Serial.print(".");
+    delay(1000);
+  }
+  
+  //LED to show status
+  pinMode(31,OUTPUT);
+  
+  
 }
 
 bool Sensors::getStatus(int sensor)
@@ -51,9 +64,13 @@ bool Sensors::getStatus(int sensor)
     }
   }else if(sensor == PIR)
   {
+    Serial.println(analogRead(PIR_PIN));
     //check the ldr status
-    if(analogRead(PIR_PIN) > 500)
+    if(analogRead(PIR_PIN) > 400)
     {
+      digitalWrite(31, HIGH);
+      delay(500);
+      digitalWrite(31,LOW);
       return true;
     }else
     {

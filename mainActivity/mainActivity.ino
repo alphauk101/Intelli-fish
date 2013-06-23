@@ -10,7 +10,8 @@ static int HALFPOWER = 3098;
 static int QUARTPOWER = 9345;
 static int NIGHTPOWER = 7395;
 
-unsigned long HALFPOWER_TIMER = 10 * 1000;
+unsigned long HALFPOWER_TIMER = 60000;
+unsigned long QUARTPOWER_TIMER = 120000;
 unsigned long CURRENT_TIME;
 
 
@@ -51,15 +52,25 @@ void loop()
   if(DAYTIME)
   {
     Serial.println("DAY TIME");
-    
+
     //its daytime so we need to manage half power etc
 
     if(timerOne(false))
     {
-      //go down to half power
-      Serial.println("going to half");
-      light.LightingOnMode(HALFPOWER);
-    }else
+      Serial.println("Half Power timer triggered");
+      //we can assume that timer one has ALWAYS triggered if timer two has triggered
+      if(timerTwo(false))//check the quater power trigger
+      {
+        Serial.println("Quarter Power timer triggered");
+        light.LightingOnMode(QUARTPOWER);
+      }
+      else
+      {
+        //go down to half power
+        light.LightingOnMode(HALFPOWER);
+      }
+    }
+    else
     {
       Serial.println("going to full power");
       light.LightingOnMode(FULLPOWER);
@@ -76,7 +87,8 @@ void loop()
   {
     //the PIR has seen something so reset the timers
     Serial.println(">>>>>>>>>>>>>>>> PIR SENSOR TRIGGERED <<<<<<<<<<<<<<<");
-    timerOne(true);
+    timerOne(true); 
+    timerTwo(true);//reset the timers
   }
 
 
@@ -114,14 +126,18 @@ void checkLight()
 boolean timerOne(boolean reset)
 {
   //if a true is passed then timer is reset is a false is passed then we are just updating
-
+  
+  
   if(reset)
   {
     //reset the timer
     CURRENT_TIME = millis();
+
   }
   else
   {
+    Serial.print((millis() - CURRENT_TIME) / 1000);
+    Serial.println(" Seconds passed");
     //if time up then return true else return false
     if((millis() - CURRENT_TIME) > HALFPOWER_TIMER)
     {
@@ -135,6 +151,34 @@ boolean timerOne(boolean reset)
 
   //If a true is returned then the timer is up
 }
+
+//if a true is passed then timer is reset is a false is passed then we are just updating
+boolean timerTwo(boolean reset)
+{
+  //if a true is passed then timer is reset is a false is passed then we are just updating
+
+  if(reset)
+  {
+    //reset the timer
+    CURRENT_TIME = millis();
+  }
+  else
+  {
+    //if time up then return true else return false
+    if((millis() - CURRENT_TIME) > QUARTPOWER_TIMER)
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+  //If a true is returned then the timer is up
+}
+
+
 
 
 

@@ -2,6 +2,7 @@ MainActivity
 ============
 
 HALFPOWER_TIMER //is the amount of millis before half power kicks in
+QUARTPOWER_TIMER // is the amount of millis before Quarter power kicks in
 CURRENT_TIME = storage long for current millis of device
 
 Lighting

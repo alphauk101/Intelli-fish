@@ -36,7 +36,7 @@ void setup()
   light.init();
 
   //intailise sensors
-  sensor.SetPins(A1,A2);//PIR,LDR
+  sensor.SetPins(A0,A2);//PIR,LDR
 
   sensor.init();
 
@@ -51,7 +51,7 @@ void loop()
 
   if(DAYTIME)
   {
-    Serial.println("DAY TIME");
+    //Serial.println("DAY TIME");
 
     //its daytime so we need to manage half power etc
 
@@ -92,33 +92,36 @@ void loop()
   }
 
 
-
   delay(1000);
 }
 
 //checks the light level in the room and set DAYTIME flags
 void checkLight()
 {
-  if(sensor.getStatus(sensor.LDR))//if its night
-  {  
-    //it is worth waiting X secs to "double check that it is definitly night time and not just a false reading"
+  if(sensor.getStatus(sensor.LDR))//if its day
+  { 
+    if(! DAYTIME)
+    { 
+      delay(3000);
+      if(sensor.getStatus(sensor.LDR))
+      {
+        DAYTIME = true;
+      }
+    }
+  }
+  else //its night
+  {
     if(DAYTIME)
     {
-      delay(5000);
-      if(sensor.getStatus(sensor.LDR))
+      delay(3000);
+      if(! sensor.getStatus(sensor.LDR))//returns night again!
       {
         DAYTIME = false;
       }
     }
+
   }
-  else
-  {
-    delay(2000);
-    if(! sensor.getStatus(sensor.LDR))
-    {
-      DAYTIME = true;
-    }
-  }
+
 }
 
 
@@ -126,8 +129,8 @@ void checkLight()
 boolean timerOne(boolean reset)
 {
   //if a true is passed then timer is reset is a false is passed then we are just updating
-  
-  
+
+
   if(reset)
   {
     //reset the timer
@@ -136,8 +139,8 @@ boolean timerOne(boolean reset)
   }
   else
   {
-    Serial.print((millis() - CURRENT_TIME) / 1000);
-    Serial.println(" Seconds passed");
+    //Serial.print((millis() - CURRENT_TIME) / 1000);
+    //Serial.println(" Seconds passed");
     //if time up then return true else return false
     if((millis() - CURRENT_TIME) > HALFPOWER_TIMER)
     {
@@ -177,6 +180,8 @@ boolean timerTwo(boolean reset)
 
   //If a true is returned then the timer is up
 }
+
+
 
 
 

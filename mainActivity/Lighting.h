@@ -11,7 +11,7 @@ class Lighting
     void LightingOnMode(int);
     Lighting(int, int, int);
     void init(void);
-    
+    void Storm();
   private:
     void switchLight(int, bool);
     void halfLight(int, bool);

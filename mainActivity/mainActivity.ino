@@ -10,8 +10,8 @@ static int HALFPOWER = 3098;
 static int QUARTPOWER = 9345;
 static int NIGHTPOWER = 7395;
 
-unsigned long HALFPOWER_TIMER = 60000;
-unsigned long QUARTPOWER_TIMER = 120000;
+unsigned long HALFPOWER_TIMER = 60000; // 10 mins
+unsigned long QUARTPOWER_TIMER = 120000; //15 mins
 unsigned long CURRENT_TIME;
 
 
@@ -19,8 +19,8 @@ int LIGHT_VALUE = 300;//this should be between 1000 and 0, closer to 0 eqauls le
 
 
 //these leds are status for each strip of lights
-int SBLUE_PIN = 11;
-int SWHITE1_PIN = 12;
+int SBLUE_PIN = 12;
+int SWHITE1_PIN = 11;
 int SWHITE2_PIN = 13;
 boolean DAYTIME = true;
 
@@ -36,7 +36,7 @@ void setup()
   light.init();
 
   //intailise sensors
-  sensor.SetPins(A0,A2);//PIR,LDR
+  sensor.SetPins(A1,A0);//PIR,LDR
 
   sensor.init();
 
@@ -91,6 +91,13 @@ void loop()
     timerTwo(true);//reset the timers
   }
 
+  if(!DAYTIME)
+  {
+    if(random(1,67000) == 33500)
+    {
+      light.Storm();
+    }
+  }
 
   delay(1000);
 }
@@ -119,9 +126,7 @@ void checkLight()
         DAYTIME = false;
       }
     }
-
   }
-
 }
 
 
@@ -180,6 +185,7 @@ boolean timerTwo(boolean reset)
 
   //If a true is returned then the timer is up
 }
+
 
 
 

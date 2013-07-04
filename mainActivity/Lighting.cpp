@@ -243,6 +243,44 @@ void Lighting::halfLight(int pin, bool switchUp)
   }
 }
 
+void Lighting::Storm()
+{
+  halfLight(BLUE_PIN, true);
+  switchLight(WHITE2_PIN, false);
+  halfLight(WHITE1_PIN, true);
+  //display the lightning action
+  int ran = random(1,5);
+  for(int a = 0; a <= ran; a++)
+  {
+    digitalWrite(WHITE2_PIN,LOW);
+    digitalWrite(WHITE2_PIN,HIGH);
+    delay(50);
+    digitalWrite(WHITE2_PIN,LOW);
+    delay(50);
+    digitalWrite(WHITE2_PIN,HIGH);
+    delay(250);
+    digitalWrite(WHITE2_PIN,LOW);
+    delay(50);
+    digitalWrite(WHITE2_PIN,HIGH);
+    delay(100);
+    digitalWrite(WHITE2_PIN,LOW);
+    delay(150);
+    digitalWrite(WHITE2_PIN,HIGH);
+    delay(50);
+    digitalWrite(WHITE2_PIN,LOW);
+    delay(70);
+    digitalWrite(WHITE2_PIN,HIGH);
+    delay(250);
+    digitalWrite(WHITE2_PIN,LOW);
+    delay(50);
+    digitalWrite(WHITE2_PIN,HIGH);
+    delay(350);
+    digitalWrite(WHITE2_PIN,LOW);
+    delay(2000);
+  }
+}
+
+
 
 
 

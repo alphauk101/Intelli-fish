@@ -9,7 +9,7 @@ class Sensors
   bool getStatus(int);
   int LDR;
   int PIR;
-  
+  int getLDRValue(void);
   private:
 
 };

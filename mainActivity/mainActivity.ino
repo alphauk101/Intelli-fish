@@ -14,14 +14,17 @@ unsigned long HALFPOWER_TIMER = 60000; // 10 mins
 unsigned long QUARTPOWER_TIMER = 120000; //15 mins
 unsigned long CURRENT_TIME;
 
+int red_led = 4;
+int yellow_led = 3;
+int green_led = 2;
 
 int LIGHT_VALUE = 300;//this should be between 1000 and 0, closer to 0 eqauls less light.
 
 
 //these leds are status for each strip of lights
-int SBLUE_PIN = 12;
+int SBLUE_PIN = 9;
 int SWHITE1_PIN = 11;
-int SWHITE2_PIN = 13;
+int SWHITE2_PIN = 10;
 boolean DAYTIME = true;
 
 Lighting light = Lighting(SWHITE1_PIN,SWHITE2_PIN,SBLUE_PIN);//lighting class
@@ -34,7 +37,10 @@ void setup()
   Serial.println("Serial Communication Started.....");
   //intailise lighting class
   light.init();
-
+  pinMode(green_led, OUTPUT);//power led
+  pinMode(red_led, OUTPUT);
+  pinMode(yellow_led, OUTPUT);
+  digitalWrite(green_led,HIGH);
   //intailise sensors
   sensor.SetPins(A1,A0);//PIR,LDR
 
@@ -42,6 +48,8 @@ void setup()
 
   CURRENT_TIME = millis();//set the timer so we have something to use
   Serial.println("Set up complete running routine...");
+  showInitDone();
+  digitalWrite(green_led,HIGH);
 }
 void loop()
 {
@@ -86,9 +94,12 @@ void loop()
   if(sensor.getStatus(sensor.PIR))
   {
     //the PIR has seen something so reset the timers
-    Serial.println(">>>>>>>>>>>>>>>> PIR SENSOR TRIGGERED <<<<<<<<<<<<<<<");
+    Serial.println(">>>>>>>>>>>>>> PIR SENSOR TRIGGERED <<<<<<<<<<<<<<<");
+    digitalWrite(red_led,HIGH);
     timerOne(true); 
     timerTwo(true);//reset the timers
+    delay(250);
+    digitalWrite(red_led,LOW);
   }
 
   if(!DAYTIME)
@@ -127,6 +138,14 @@ void checkLight()
       }
     }
   }
+  if(DAYTIME)
+  {
+    digitalWrite(yellow_led, LOW);
+  }else
+  {
+    digitalWrite(yellow_led, HIGH);
+  }
+  
 }
 
 
@@ -186,6 +205,27 @@ boolean timerTwo(boolean reset)
   //If a true is returned then the timer is up
 }
 
+void showInitDone()
+{
+  for(int a = 0 ;a < 5; a++)
+  {
+    digitalWrite(red_led, LOW);
+    digitalWrite(green_led, LOW);
+    digitalWrite(yellow_led, LOW);
+    
+    digitalWrite(red_led,HIGH);
+    delay(250);
+    digitalWrite(red_led, LOW);
+    digitalWrite(yellow_led, HIGH);
+    delay(250);
+    digitalWrite(yellow_led, LOW);
+    digitalWrite(green_led, HIGH);
+    delay(250);
+  }
+      digitalWrite(red_led, LOW);
+    digitalWrite(green_led, LOW);
+    digitalWrite(yellow_led, LOW);
+}
 
 
 

@@ -2,7 +2,7 @@
 #include "Sensors.h"
 #include <arduino.h>
 
-static int NIGHT_LEVEL = 600;
+static int NIGHT_LEVEL = 800;
 
 //int PIR = 20;
 //int LDR = 21;

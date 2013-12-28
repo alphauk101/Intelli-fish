@@ -2,6 +2,9 @@
 #include "Sensors.h"
 //main code for intelli-fish
 
+//C:\arduino-1.0.3\hardware\tools\avr\bin>avrdude.exe -C C:\arduino-1.0.3\hardware
+//\tools\avr\etc\avrdude.conf -c avrispmkII -P usb -p ATmega328P  -U flash:w:\User
+//s\Lee\Desktop\mainActivity.hex -F
 //not sure how to expose these from the cpp library
 //so il default them to here for now
 
@@ -18,7 +21,7 @@ int red_led = 4;
 int yellow_led = 3;
 int green_led = 2;
 
-int LIGHT_VALUE = 300;//this should be between 1000 and 0, closer to 0 eqauls less light.
+int LIGHT_VALUE = 600;//this should be between 1000 and 0, closer to 0 eqauls less light.
 
 
 //these leds are status for each strip of lights
@@ -41,7 +44,7 @@ void setup()
   pinMode(red_led, OUTPUT);
   pinMode(yellow_led, OUTPUT);
   digitalWrite(green_led,HIGH);
-  //intailise sensors
+  //initialise sensors
   sensor.SetPins(A1,A0);//PIR,LDR
 
   sensor.init();
@@ -56,13 +59,10 @@ void loop()
   //ok first thing check what day time
   checkLight();
 
-
   if(DAYTIME)
   {
     //Serial.println("DAY TIME");
-
     //its daytime so we need to manage half power etc
-
     if(timerOne(false))
     {
       Serial.println("Half Power timer triggered");
@@ -141,11 +141,12 @@ void checkLight()
   if(DAYTIME)
   {
     digitalWrite(yellow_led, LOW);
-  }else
+  }
+  else
   {
     digitalWrite(yellow_led, HIGH);
   }
-  
+
 }
 
 
@@ -212,7 +213,7 @@ void showInitDone()
     digitalWrite(red_led, LOW);
     digitalWrite(green_led, LOW);
     digitalWrite(yellow_led, LOW);
-    
+
     digitalWrite(red_led,HIGH);
     delay(250);
     digitalWrite(red_led, LOW);
@@ -222,10 +223,11 @@ void showInitDone()
     digitalWrite(green_led, HIGH);
     delay(250);
   }
-      digitalWrite(red_led, LOW);
-    digitalWrite(green_led, LOW);
-    digitalWrite(yellow_led, LOW);
+  digitalWrite(red_led, LOW);
+  digitalWrite(green_led, LOW);
+  digitalWrite(yellow_led, LOW);
 }
+
 
 
 

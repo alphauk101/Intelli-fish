@@ -11,7 +11,7 @@ class Sensors
   int PIR;
   int getLDRValue(void);
   private:
-
+  int _getLDRValue();
 };
 
 #endif

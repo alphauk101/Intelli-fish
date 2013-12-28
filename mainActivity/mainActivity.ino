@@ -13,8 +13,8 @@ static int HALFPOWER = 3098;
 static int QUARTPOWER = 9345;
 static int NIGHTPOWER = 7395;
 
-unsigned long HALFPOWER_TIMER = 60000; // 10 mins
-unsigned long QUARTPOWER_TIMER = 120000; //15 mins
+unsigned long HALFPOWER_TIMER = 120000; // 10 mins
+unsigned long QUARTPOWER_TIMER = 180000; //15 mins
 unsigned long CURRENT_TIME;
 
 int red_led = 4;

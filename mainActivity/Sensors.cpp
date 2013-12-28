@@ -51,7 +51,6 @@ int Sensors::getLDRValue()
 
 bool Sensors::getStatus(int sensor)
 {
-
   if(sensor == LDR)
   {
 
@@ -60,7 +59,7 @@ bool Sensors::getStatus(int sensor)
     //what we would consider night if not switch to night mode
     Serial.println(analogRead(LDR_PIN));
     
-    if(analogRead(LDR_PIN) <= NIGHT_LEVEL)
+    if(_getLDRValue() <= NIGHT_LEVEL)
     {
       Serial.println("LDR true day");
       return true;
@@ -76,7 +75,6 @@ bool Sensors::getStatus(int sensor)
     //check the ldr status
     if(analogRead(PIR_PIN) > 400)
     {
-
       return true;
     }else
     {
@@ -84,4 +82,15 @@ bool Sensors::getStatus(int sensor)
     }
   }
 }
-
+//does a quick average of 10 readings to makesure that there a anomally reading is used
+int Sensors::_getLDRValue()
+{
+  //we shall take 10 readings in
+  int med = 0; 
+  for(int a = 0; a < 10; a++)
+  {
+    med += analogRead(LDR_PIN);
+    delay(5);
+  }
+  return (med / 10);
+}
